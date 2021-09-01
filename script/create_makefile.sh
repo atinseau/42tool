@@ -1,27 +1,47 @@
+#!/bin/bash
+
 GREEN='\033[0;32m'
 RED='\033[0;31m'
 NO='\033[0m'
 YELLOW='\033[1;33m'
+CC=
+FLAGS=" -Wall -Wextra -Wall"
 
 cat Makefile &> /dev/null
-if [ $? -eq 0 ]; then
-	echo ${RED}Makefile already exists...${NO}
+if [ "$?" = "0" ]; then
+	printf "${RED}Makefile already exists...${NO}\n"
 	exit 1
 fi;
 
-printf "Set your compiler: "
-read -r CC;
-printf "Set your flags: "
-read -r FLAGS;
-printf "Set your program name: "
+printf "Your program name ? "
 read -r NAME;
-printf "Set file extension (.c, .cpp, empty for all...) : "
+
+printf "File extension (.c, .cpp, empty for all...) ? "
 read -r EXT;
+EXT=$(echo $EXT | sed "s/[.]//g");
 
-EXT=$(echo $EXT | sed "s/[.]//g")
+if [ "$EXT" = "cpp" ]; then
+	CC=clang++
+elif [ "$EXT" = "c" ]; then
+	CC=gcc
+fi;
 
-files=($(ls))
-fs=()
+if [ -z "$CC" ]; then
+	printf "Your compiler ? "
+	read -r CC;
+fi;
+
+
+printf "Need extra flags (current: ${YELLOW}${FLAGS}${NO}) [y/n] "
+read -r EXTRA;
+
+if [ "$EXTRA" = "y" ]; then
+	printf "Your flags ? "
+	read -r EXTRA;
+	FLAGS="$FLAGS $EXTRA"
+fi;
+
+declare -a fs
 
 fetch_files ()
 {
@@ -42,7 +62,7 @@ fetch_files ()
 	done;
 }
 
-fetch_files "" ${files[@]}
+fetch_files "" $(ls)
 
 let count=0
 for file in ${fs[@]}; do
@@ -50,34 +70,52 @@ for file in ${fs[@]}; do
 done
 
 cat <<EOF > Makefile
-FILE=$(
+# AUTO-GENERATE FILE
+# BY 42TOOLBOX
+# creator: https://github.com/alphagameX
+# project author: $USER
+
+CC=$CC
+NAME=$NAME
+FLAGS=$FLAGS
+SRCS=$(
 	if [[ $count != 0 ]]; then
 		let i=0
 		for file in ${fs[@]}; do
 			if [ $i -eq 0 ]; then
-				echo "\t ${file} \\"
+				printf "\t"
+				printf "${file}"
 			else
-				echo "\t\t ${file} \\"
+				printf "\t\t"
+				printf "${file}"
 			fi
 			((i++))
+			if [ "$i" != "$count" ]; then
+				echo " \\"
+			fi;
 		done
 	else
 		echo "\$(wildcard *.${EXT})"
 	fi;
 )
-FLAGS=$FLAGS
-NAME=$NAME
-CC=$CC
+OBJS=\$(SRCS:.${EXT}=.o)
 
-all:
-	\$(CC) \$(FLAGS) \$(FILE) -o \$(NAME)
+\$(NAME):\$(OBJS)
+	@\$(CC) \$(FLAGS) \$(OBJS) -o \$(NAME)
+
+all: \$(NAME)
 
 clean:
-	rm -rf \$(NAME)
+	@rm -f \$(OBJS)
 
 fclean: clean
+	@rm -f \$(NAME)
 
 re: fclean all
+
+.PHONY: all clean fclean re
 EOF
 
-echo "${GREEN}Makefile created !${NO}"
+printf "${GREEN}Makefile created !${NO}\n"
+
+

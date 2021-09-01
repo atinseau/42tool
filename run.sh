@@ -12,7 +12,7 @@ format_menu ()
 	printf "${YELLOW}[${1}] $GREEN$name$NO\n"
 }
 
-sh update.sh
+# sh update.sh
 clear
 
 scripts=($(ls ${ROOT}/script))
@@ -25,15 +25,17 @@ done;
 
 printf "what do you want ? "
 read -r line;
-
-if [ $line -lt 0 -o $line -ge $i ]; then
-	echo "${RED}Wtf ?!"
-	exit 1
-fi;
-
 clear
-printf "${GREEN}running ${scripts[line]}...$NO\n"
-sh $ROOT/script/${scripts[line]}
-if [[ $? == 0 ]]; then
-	echo "done !"
-fi;
+entries=($line)
+for entry in ${entries[@]}; do
+	if [ $entry -lt 0 -o $entry -ge $i ]; then
+		echo "${RED}Wtf ?!"
+		exit 1
+	fi;
+	printf "${GREEN}running ${scripts[entry]}...$NO\n"
+	bash $ROOT/script/${scripts[entry]}
+	if [[ $? == 0 ]]; then
+		echo "$entry > done !"
+	fi;
+done;
+
