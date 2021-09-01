@@ -11,6 +11,7 @@ if [[ $? != 0 ]]; then
 fi;
 
 cp -r * ~/42toolbox
+cp -r .git ~/42toolbox
 
 if [[ "$SHELL" == "/bin/zsh" ]]; then
 	grep "alias 42toolbox" ~/.zshrc &> /dev/null
