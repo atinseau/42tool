@@ -12,6 +12,7 @@ format_menu ()
 	printf "${YELLOW}[${1}] $GREEN$name$NO\n"
 }
 
+sh update.sh
 clear
 
 scripts=($(ls ${ROOT}/script))
