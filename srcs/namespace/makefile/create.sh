@@ -71,7 +71,7 @@ done
 
 cat <<EOF > Makefile
 # AUTO-GENERATE FILE
-# BY 42TOOLBOX
+# BY 42tool
 # creator: https://github.com/alphagameX
 # project author: $USER
 
