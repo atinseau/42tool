@@ -41,28 +41,25 @@ if [ "$EXTRA" = "y" ]; then
 	FLAGS="$FLAGS $EXTRA"
 fi;
 
-declare -a fs
-
+fs=()
+level=""
 fetch_files ()
 {
-	arr=${@:2}
-	for file in ${arr[@]}; do
-		if [ -d $file ]; then
-			fetch_files $file $(ls $file)
+	array=$@
+	for f in ${array[@]}; do
+		if [ -d "${level}${f}" ]; then
+			level="${level}${f}/"
+			fetch_files $(ls $level)
 		else
-			extension=$(echo $file | cut -d '.' -f2)
+			extension=$(echo $f | cut -d '.' -f2)
 			if [[ "$extension" == "$EXT" ]] || [ -z "$EXT" ]; then
-				if [ $1 ]; then
-					fs+=("${1}/${file}")
-				else
-					fs+=($file)
-				fi;
+				fs+=("${level}${f}")
 			fi;
 		fi;
 	done;
 }
 
-fetch_files "" $(ls)
+fetch_files $(ls)
 
 let count=0
 for file in ${fs[@]}; do

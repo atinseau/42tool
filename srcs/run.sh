@@ -23,10 +23,10 @@ if [ $1 ]; then
 	# NAMESPACE LIST
 	if [ "$1" = "--namespace" ]; then
 		printf "${YELLOW}List of available namespace${NO}\n"
-		lists=($(ls -d namespace/*/))
+		lists=($(ls -d $ROOT/namespace/*/))
 		i=0
 		for list in ${lists[@]}; do
-			name=$(echo $list | sed "s/namespace//g;s/\///g")
+			name=$(echo $list | rev | cut -d/ -f2 | rev)
 			printf "${i}: ${name}\n"
 			((i++))
 		done;
@@ -35,7 +35,7 @@ if [ $1 ]; then
 
 	# HELP COMMAND
 	if [ "$1" = "--help" ]; then
-		cat README.md
+		cat $ROOT/README.md
 		exit 0
 	fi;
 
@@ -64,7 +64,7 @@ if [ $1 ]; then
 			name=$(echo $script | sed "s/.sh//g")
 			if [ "$2" = "$name" ]; then
 				printf "${GREEN}starting ${exec_path}/${2}.sh...$NO\n"
-				bash $ROOT/$exec_path/$2.sh
+				bash $ROOT/$exec_path/$2.sh ${@:3}
 				exit 0
 			fi;
 		done;
