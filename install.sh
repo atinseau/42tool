@@ -5,7 +5,7 @@ RED='\033[0;31m'
 NO='\033[0m'
 YELLOW='\033[1;33m'
 
-cp -r $PWD/srcs ~/42tool
+cp -r srcs ~/42tool
 if [ "$?" != "0" ]; then
 	echo "${RED}already installed...${NO}"
 	exit 1

@@ -35,7 +35,7 @@ if [ $1 ]; then
 
 	# HELP COMMAND
 	if [ "$1" = "--help" ]; then
-		cat $ROOT/README.md
+		cat $ROOT/_help.md
 		exit 0
 	fi;
 
@@ -96,6 +96,6 @@ for entry in ${entries[@]}; do
 		exit 1
 	fi;
 	printf "${GREEN}starting ${exec_path}/${scripts[entry]}...$NO\n"
-	bash $ROOT/$exec_path/${scripts[entry]}
+	$SHELL $ROOT/$exec_path/${scripts[entry]}
 done;
 
