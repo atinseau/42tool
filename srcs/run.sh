@@ -43,7 +43,14 @@ if [ $1 ]; then
 	scripts=($(ls -p ${ROOT}/namespace/$1 2> /dev/null | grep -v /))
 	# HANDLE UNEXIST NAMESPACE
 	if [ $? != 0 ]; then
-		printf "${RED}Namespace $1 not exists !${NO}\n"
+
+		cat "${ROOT}/namespace/${1}.sh" &> /dev/null
+		if [ $? == 0 ]; then
+			printf "${GREEN}starting namespace/${1}.sh...$NO\n"
+			$SHELL ${ROOT}/namespace/${1}.sh
+		else
+			printf "${RED}Namespace or command $1 not exists !${NO}\n"
+		fi;
 		exit 1
 	fi
 
@@ -98,4 +105,6 @@ for entry in ${entries[@]}; do
 	printf "${GREEN}starting ${exec_path}/${scripts[entry]}...$NO\n"
 	$SHELL $ROOT/$exec_path/${scripts[entry]}
 done;
+
+
 

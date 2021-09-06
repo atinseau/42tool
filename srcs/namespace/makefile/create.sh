@@ -71,7 +71,7 @@ cat <<EOF > Makefile
 # BY 42tool
 # creator: https://github.com/alphagameX
 # project author: $USER
-
+#######################
 CC=$CC
 NAME=$NAME
 FLAGS=$FLAGS
@@ -95,21 +95,22 @@ SRCS=$(
 		echo "\$(wildcard *.${EXT})"
 	fi;
 )
+#######################
 OBJS=\$(SRCS:.${EXT}=.o)
-
+#######################
 \$(NAME):\$(OBJS)
 	@\$(CC) \$(FLAGS) \$(OBJS) -o \$(NAME)
-
+#######################
 all: \$(NAME)
-
+#######################
 clean:
 	@rm -f \$(OBJS)
-
+#######################
 fclean: clean
 	@rm -f \$(NAME)
-
+#######################
 re: fclean all
-
+#######################
 .PHONY: all clean fclean re
 EOF
 
