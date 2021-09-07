@@ -8,21 +8,30 @@ YELLOW='\033[1;33m'
 ROOT="`dirname \"$0\"`"
 EXT=
 fs=()
-level=""
 
 # FUNCTION FOR FETCH ALL FILE WITH RIGHT EXTENSION IN CURRENT PATH
 fetch_files ()
 {
-	files=$@
-	for f in ${files[@]}; do
-		if [ -d "${level}${f}" ]; then
-			level="${level}${f}/"
-			# RECURCIVE
-			fetch_files $(ls $level)
+	local files=(${@:2})
+	local path="$1"
+
+	for file in ${files[@]}; do
+		if [ -d $file ]; then
+			local level
+			if [ "$path" != "" ]; then
+				level="$path/$file"
+			else
+				level=$file
+			fi;
+			fetch_files $level $(ls $level) 
 		else
-			extension=$(echo $f | cut -d '.' -f2)
+			local extension=$(echo $file | cut -d '.' -f2)
 			if [[ "$extension" == "$EXT" ]] || [ -z "$EXT" ]; then
-				fs+=("${level}${f}")
+					if [ "$path" = "" ]; then
+						fs+=(${file}) 
+					else
+						fs+=(${path}/${file}) 
+					fi;
 			fi;
 		fi;
 	done;
@@ -64,7 +73,7 @@ for line in ${!array[@]}; do
 		fi;
 
 		# FETCH NEW FILE
-		fetch_files $(ls)
+		fetch_files "" $(ls)
 
 		# GET NEW FILE
 		let count=0

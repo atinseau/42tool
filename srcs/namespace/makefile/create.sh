@@ -42,24 +42,35 @@ if [ "$EXTRA" = "y" ]; then
 fi;
 
 fs=()
-level=""
+
 fetch_files ()
 {
-	array=$@
-	for f in ${array[@]}; do
-		if [ -d "${level}${f}" ]; then
-			level="${level}${f}/"
-			fetch_files $(ls $level)
+	local files=(${@:2})
+	local path="$1"
+
+	for file in ${files[@]}; do
+		if [ -d $file ]; then
+			local level
+			if [ "$path" != "" ]; then
+				level="$path/$file"
+			else
+				level=$file
+			fi;
+			fetch_files $level $(ls $level) 
 		else
-			extension=$(echo $f | cut -d '.' -f2)
+			local extension=$(echo $file | cut -d '.' -f2)
 			if [[ "$extension" == "$EXT" ]] || [ -z "$EXT" ]; then
-				fs+=("${level}${f}")
+					if [ "$path" = "" ]; then
+						fs+=(${file}) 
+					else
+						fs+=(${path}/${file}) 
+					fi;
 			fi;
 		fi;
 	done;
 }
 
-fetch_files $(ls)
+fetch_files "" $(ls)
 
 let count=0
 for file in ${fs[@]}; do
@@ -69,7 +80,7 @@ done
 cat <<EOF > Makefile
 # AUTO-GENERATE FILE
 # BY 42tool
-# creator: https://github.com/alphagameX
+# creator: https://github.com/atinseau
 # project author: $USER
 #######################
 CC=$CC
