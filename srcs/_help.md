@@ -19,3 +19,9 @@
 42tool ${namespace} ${command}
 	- directly execute the right command
 
+- Some commands of an help function so you can do
+
+	42tool ?${namespace} ${command} --help
+
+	*? is option parameter
+

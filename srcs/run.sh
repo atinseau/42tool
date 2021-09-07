@@ -49,7 +49,12 @@ if [ $1 ]; then
 			printf "${GREEN}starting namespace/${1}.sh...$NO\n"
 			$SHELL ${ROOT}/namespace/${1}.sh
 		else
-			printf "${RED}Namespace or command $1 not exists !${NO}\n"
+			ls "${ROOT}/namespace/${1}" &> /dev/null
+			if [ $? == 0 ]; then
+				printf "${YELLOW}Namespace ${1} is empty...${NO}\n"
+			else 
+				printf "${RED}Namespace or command $1 not exists !${NO}\n"
+			fi;
 		fi;
 		exit 1
 	fi
