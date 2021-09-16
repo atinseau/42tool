@@ -20,5 +20,6 @@ if [ "$SHELL" = "/usr/bin/zsh" ] || [ "$SHELL" = "/bin/zsh" ]; then
 	fi;
 	echo "alias 42tool=\"$HOME/42tool/run.sh\"" >> ~/.zshrc
 	chmod +x ~/42tool/run.sh
+	mkdir ~/42tool/installed
 	printf "${GREEN}Install completed, restart zsh !${NO}\n"
 fi;
