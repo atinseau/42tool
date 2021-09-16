@@ -16,3 +16,5 @@ remove_line "#42tool"
 rm -rf ~/42tool
 
 printf "${GREEN}Uninstall completed${NO}\n"
+
+exit 0

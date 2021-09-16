@@ -16,6 +16,7 @@ already ()
 {
 	if [ "$1" = "--remove" ] || [ "$1" = "-r" ]; then
 		remove_line "alias composer="
+		rm -rf ~/42tool/installed/composer
 		printf "${GREEN}Composer unistalled...!${NO}\n"
 		exit 0
 	else
@@ -29,7 +30,7 @@ if [ $? = 0 ]; then
 	already $1
 fi;
 
-cat ~/42tool/installed/composer.phar &> /dev/null
+cat ~/42tool/installed/composer/composer.phar &> /dev/null
 if [ $? = 0 ]; then
 	already $1
 fi;
@@ -39,7 +40,8 @@ php -r "if (hash_file('sha384', 'composer-setup.php') === '756890a4488ce9024fc62
 php composer-setup.php
 php -r "unlink('composer-setup.php');"
 
-mv composer.phar ~/42tool/installed
-echo "alias composer=\"php ${HOME}/42tool/installed/composer.phar\" #42tool" >> ~/.zshrc
+mkdir ~/42tool/installed/composer
+mv composer.phar ~/42tool/installed/composer
+echo "alias composer=\"php ${HOME}/42tool/installed/composer/composer.phar\" #42tool" >> ~/.zshrc
 
 printf "${GREEN}Composer succesfully installled, please restart zsh!${NO}\n"
